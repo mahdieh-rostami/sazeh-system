@@ -1,6 +1,8 @@
+
 import type { Metadata } from "next";
 import { Vazirmatn } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
 
 const vazirmatn = Vazirmatn({
   variable: "--font-vazirmatn",
@@ -25,7 +27,8 @@ export default function RootLayout({
       className={'${vazirmatn.variable} h-full antialiased'}
     >
       <body className={'${vazirmatn.className} min-h-full flex flex-col'}>
-        {children}
+        <Navbar />
+        <main className="flex-1">{children}</main>
       </body>
     </html>
   );
