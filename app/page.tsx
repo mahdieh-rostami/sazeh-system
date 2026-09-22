@@ -1,30 +1,9 @@
 import Link from "next/link";
+import { FileText, Scale, Building2, ArrowLeft, Users } from "lucide-react";
 
 export default function Home() {
-  const features = [
-    {
-      title: "مدیریت قراردادها",
-      description: "مدیریت چرخه کامل قراردادها از درخواست تا خاتمه و بایگانی",
-      href: "/contracts",
-      icon: "📄",
-    },
-    {
-      title: "امور حقوقی",
-      description: "مدیریت پرونده‌های حقوقی، دعاوی، جلسات و مهلت‌های قانونی",
-      href: "/legal",
-      icon: "⚖️",
-    },
-    {
-      title: "مدیریت املاک",
-      description: "بانک اطلاعاتی جامع املاک، اسناد مالکیت و وضعیت حقوقی",
-      href: "/properties",
-      icon: "🏢",
-    },
-  ];
-
   return (
     <div dir="rtl" className="flex flex-col">
-      {/* بخش Hero */}
       <section className="bg-gradient-to-b from-blue-50 to-white py-20 px-4">
         <div className="max-w-5xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-zinc-900 mb-6 leading-tight">
@@ -38,13 +17,13 @@ export default function Home() {
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
               href="/login"
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
+              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 shadow-md"
             >
               ورود به سامانه
             </Link>
             <Link
               href="/properties"
-              className="bg-white text-blue-600 border-2 border-blue-600 px-8 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors"
+              className="bg-white text-blue-600 border-2 border-blue-600 px-8 py-3 rounded-lg font-medium hover:bg-blue-50"
             >
               مشاهده املاک
             </Link>
@@ -52,7 +31,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* بخش سه کارت اصلی */}
       <section className="py-16 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
@@ -64,62 +42,84 @@ export default function Home() {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feature) => (
-              <Link
-                key={feature.href}
-                href={feature.href}
-                className="group bg-white border border-zinc-200 rounded-2xl p-8 hover:shadow-xl hover:border-blue-200 transition-all"
-              >
-                <div className="text-5xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-bold text-zinc-900 mb-3">
-                  {feature.title}
-                </h3>
-                <p className="text-zinc-600 leading-relaxed mb-4">
-                  {feature.description}
-                </p>
-                <span className="text-blue-600 font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
-                  مشاهده
-                  <span>←</span>
-                </span>
-              </Link>
-            ))}
+            <Link href="/contracts" className="group bg-white border border-zinc-200 rounded-2xl p-8 hover:shadow-xl hover:border-blue-200 transition-all">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center mb-5 shadow-md">
+                <FileText className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-zinc-900 mb-3">مدیریت قراردادها</h3>
+              <p className="text-zinc-600 leading-relaxed mb-4">
+                مدیریت چرخه کامل قراردادها از درخواست تا خاتمه و بایگانی
+              </p>
+              <span className="text-blue-600 font-medium flex items-center gap-1">
+                مشاهده
+                <ArrowLeft className="w-4 h-4" />
+              </span>
+            </Link>
+
+            <Link href="/legal" className="group bg-white border border-zinc-200 rounded-2xl p-8 hover:shadow-xl hover:border-blue-200 transition-all">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center mb-5 shadow-md">
+                <Scale className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-zinc-900 mb-3">امور حقوقی</h3>
+              <p className="text-zinc-600 leading-relaxed mb-4">
+                مدیریت پرونده‌های حقوقی، دعاوی، جلسات و مهلت‌های قانونی
+              </p>
+              <span className="text-blue-600 font-medium flex items-center gap-1">
+                مشاهده
+                <ArrowLeft className="w-4 h-4" />
+              </span>
+            </Link>
+
+            <Link href="/properties" className="group bg-white border border-zinc-200 rounded-2xl p-8 hover:shadow-xl hover:border-blue-200 transition-all">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center mb-5 shadow-md">
+                <Building2 className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-zinc-900 mb-3">مدیریت املاک</h3>
+              <p className="text-zinc-600 leading-relaxed mb-4">
+                بانک اطلاعاتی جامع املاک، اسناد مالکیت و وضعیت حقوقی
+              </p>
+              <span className="text-blue-600 font-medium flex items-center gap-1">
+                مشاهده
+                <ArrowLeft className="w-4 h-4" />
+              </span>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* بخش آمار */}
       <section className="py-16 px-4 bg-zinc-50">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div className="text-center bg-white p-6 rounded-xl border border-zinc-200">
-              <div className="text-3xl font-bold text-blue-600 mb-2">۰</div>
-              <div className="text-zinc-600">قرارداد فعال</div>
+              <FileText className="w-8 h-8 mx-auto mb-3 text-blue-600" />
+              <div className="text-3xl font-bold mb-2 text-blue-600">۰</div>
+              <div className="text-zinc-600 text-sm">قرارداد فعال</div>
             </div>
             <div className="text-center bg-white p-6 rounded-xl border border-zinc-200">
-              <div className="text-3xl font-bold text-emerald-600 mb-2">۰</div>
-              <div className="text-zinc-600">پرونده حقوقی</div>
+              <Scale className="w-8 h-8 mx-auto mb-3 text-emerald-600" />
+              <div className="text-3xl font-bold mb-2 text-emerald-600">۰</div>
+              <div className="text-zinc-600 text-sm">پرونده حقوقی</div>
             </div>
             <div className="text-center bg-white p-6 rounded-xl border border-zinc-200">
-              <div className="text-3xl font-bold text-amber-600 mb-2">۰</div>
-              <div className="text-zinc-600">ملک ثبت‌شده</div>
+              <Building2 className="w-8 h-8 mx-auto mb-3 text-amber-600" />
+              <div className="text-3xl font-bold mb-2 text-amber-600">۰</div>
+              <div className="text-zinc-600 text-sm">ملک ثبت‌شده</div>
             </div>
             <div className="text-center bg-white p-6 rounded-xl border border-zinc-200">
-              <div className="text-3xl font-bold text-purple-600 mb-2">۰</div>
-              <div className="text-zinc-600">پیمانکار</div>
+              <Users className="w-8 h-8 mx-auto mb-3 text-purple-600" />
+              <div className="text-3xl font-bold mb-2 text-purple-600">۰</div>
+              <div className="text-zinc-600 text-sm">پیمانکار</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* فوتر */}
       <footer className="bg-zinc-900 text-zinc-400 py-8 px-4">
         <div className="max-w-7xl mx-auto text-center">
-          <p className="mb-2">
+          <p className="mb-2 text-sm">
             سامانه جامع مدیریت قراردادها، امور حقوقی و املاک
           </p>
-          <p className="text-sm">
-            © ۱۴۰۵ — تمامی حقوق محفوظ است
-          </p>
+          <p className="text-xs">© ۱۴۰۵ — تمامی حقوق محفوظ است</p>
         </div>
       </footer>
     </div>
