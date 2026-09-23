@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 const initial = [
   { id: 1, code: "CTR-001", title: "قرارداد نگهداری آسانسور", party: "شرکت آسانسور نمونه", property: "ساختمان اداری مرکزی", amount: 250000000, startDate: "۱۴۰۵/۰۱/۱۵", endDate: "۱۴۰۵/۱۲/۲۹", status: "فعال" },
@@ -106,7 +107,9 @@ export default function Page() {
                     <span className="text-xs text-zinc-500 font-mono bg-zinc-100 px-2 py-1 rounded">{x.code}</span>
                     <span className={statusCls(x.status)}>{x.status}</span>
                   </div>
-                  <h3 className="text-lg font-bold text-zinc-900 mb-3">{x.title}</h3>
+                  <Link href={"/contracts/" + x.id} className="text-lg font-bold text-zinc-900 mb-3 block hover:text-blue-600">
+  {x.title}
+</Link>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                     <div className="text-zinc-600">👤 طرف: <span className="font-medium text-zinc-900">{x.party}</span></div>
                     <div className="text-zinc-600">🏢 ملک: <span className="font-medium text-zinc-900">{x.property}</span></div>
@@ -135,8 +138,10 @@ export default function Page() {
       {list.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-xl border border-zinc-200">
           <div className="text-6xl mb-4">🔍</div>
-          <h3 className="text-xl font-bold text-zinc-900">قراردادی پیدا نشد</h3>
-        </div>
+          <Link href={"/contracts/" + x.id} className="text-lg font-bold text-zinc-900 mb-3 block hover:text-blue-600">
+  {x.title}
+</Link>
+         </div> 
       ) : null}
 
       {open ? (
@@ -202,3 +207,4 @@ export default function Page() {
     </div>
   );
 }
+
