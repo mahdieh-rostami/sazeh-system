@@ -126,47 +126,48 @@ export default function PropertiesPage() {
                       ? "text-xs px-2 py-1 rounded-full bg-emerald-100 text-emerald-700"
                       : "text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-700"
                       }
-                >
-                  {property.status}
-                </span>
-              </div>
-              <Link href={"/properties/" + property.id} className="text-lg font-bold text-zinc-900 mb-2 block hover:text-blue-600">
-                 {property.title}
-           </Link>
+                >
+                  {property.status}
+                </span>
+              </div>
+              <Link href={"/properties/" + property.id} className="text-lg font-bold text-zinc-900 mb
+-2 block hover:text-blue-600">
+                 {property.title}
+           </Link>
 
-              <p className="text-sm text-zinc-600 mb-4 leading-relaxed">
-                📍 {property.address}
-              </p>
-              <div className="border-t border-zinc-100 pt-4 space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-zinc-500">متراژ</span>
-                  <span className="font-medium text-zinc-900">
-                    {property.area.toLocaleString("fa-IR")} متر
-                  </span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-zinc-500">نوع کاربری</span>
-                  <span className="font-medium text-zinc-900">
-                    {property.usageType}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+              <p className="text-sm text-zinc-600 mb-4 leading-relaxed">
+                📍 {property.address}
+              </p>
+              <div className="border-t border-zinc-100 pt-4 space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-zinc-500">متراژ</span>
+                  <span className="font-medium text-zinc-900">
+                    {property.area.toLocaleString("fa-IR")} متر
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-zinc-500">نوع کاربری</span>
+                  <span className="font-medium text-zinc-900">
+                    {property.usageType}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
 
-      {filteredProperties.length === 0 && (
-        <div className="text-center py-16 bg-white rounded-xl border border-zinc-200">
-          <div className="text-6xl mb-4">🔍</div>
-          <h3 className="text-xl font-bold text-zinc-900 mb-2">
-            ملکی پیدا نشد
-          </h3>
-          <p className="text-zinc-600">
-            عبارت جستجوی دیگری را امتحان کنید
-          </p>
-        </div>
-      )}
-    </div>
-  );
+      {filteredProperties.length === 0 && (
+        <div className="text-center py-16 bg-white rounded-xl border border-zinc-200">
+          <div className="text-6xl mb-4">🔍</div>
+          <h3 className="text-xl font-bold text-zinc-900 mb-2">
+            ملکی پیدا نشد
+          </h3>
+          <p className="text-zinc-600">
+            عبارت جستجوی دیگری را امتحان کنید
+          </p>
+        </div>
+      )}
+    </div>
+  );
 }
