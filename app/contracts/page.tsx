@@ -20,23 +20,14 @@ export default function ContractsPage() {
   const [status, setStatus] = useState("فعال");
   const [contractType, setContractType] = useState("خدماتی");
 
-  useEffect(() => {
-    loadContracts();
+  useEffect(function () {
+    loadData();
   }, []);
 
-  async function loadContracts() {
+  async function loadData() {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("contracts")
-      .select("*")
-      .order("id", { ascending: false });
-
-    if (error) {
-      console.error("خطا:", error);
-      alert("خطا در خواندن داده: " + error.message);
-    } else {
-      setContracts(data || []);
-    }
+    const result = await supabase.from("contracts").select("*").order("id", { ascending: false });
+    if (result.data) setContracts(result.data);
     setLoading(false);
   }
 
@@ -93,45 +84,33 @@ export default function ContractsPage() {
     };
 
     if (editingId !== null) {
-      const { error } = await supabase
-        .from("contracts")
-        .update(data)
-        .eq("id", editingId);
-      
-      if (error) {
-        alert("خطا در ویرایش: " + error.message);
+      const result = await supabase.from("contracts").update(data).eq("id", editingId);
+      if (result.error) {
+        alert("خطا در ویرایش: " + result.error.message);
         return;
       }
     } else {
-      const { error } = await supabase
-        .from("contracts")
-        .insert([data]);
-      
-      if (error) {
-        alert("خطا در ثبت: " + error.message);
+      const result = await supabase.from("contracts").insert([data]);
+      if (result.error) {
+        alert("خطا در ثبت: " + result.error.message);
         return;
       }
     }
 
     setIsModalOpen(false);
     resetForm();
-    loadContracts();
+    loadData();
   }
 
   async function handleDelete(id: number, t: string) {
     if (!window.confirm("آیا از حذف «" + t + "» مطمئن هستید؟")) return;
 
-    const { error } = await supabase
-      .from("contracts")
-      .delete()
-      .eq("id", id);
-
-    if (error) {
-      alert("خطا در حذف: " + error.message);
+    const result = await supabase.from("contracts").delete().eq("id", id);
+    if (result.error) {
+      alert("خطا در حذف: " + result.error.message);
       return;
     }
-
-    loadContracts();
+    loadData();
   }
 
   function getStatusClass(st: string) {
@@ -143,12 +122,15 @@ export default function ContractsPage() {
 
   return (
     <div dir="rtl" className="p-6 md:p-8 max-w-7xl mx-auto">
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold text-zinc-900 mb-2">مدیریت قراردادها</h1>
           <p className="text-zinc-600">اتصال به دیتابیس Supabase</p>
         </div>
-        <button onClick={openAdd} className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 shadow-sm whitespace-nowrap">
+        <button
+          onClick={openAdd}
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 whitespace-nowrap"
+        >
           + ثبت قرارداد جدید
         </button>
       </div>
@@ -156,7 +138,7 @@ export default function ContractsPage() {
       <div className="bg-white p-4 rounded-xl border border-zinc-200 mb-6">
         <input
           type="text"
-          placeholder="🔍 جستجو..."
+          placeholder="جستجو..."
           value={searchTerm}
           onChange={function (e) { setSearchTerm(e.target.value); }}
           className="w-full px-4 py-3 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -188,14 +170,14 @@ export default function ContractsPage() {
                         {c.title}
                       </Link>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                        <div className="text-zinc-600">👤 طرف: <span className="font-medium text-zinc-900">{c.party}</span></div>
-                        <div className="text-zinc-600">📋 نوع: <span className="font-medium text-zinc-900">{c.contract_type}</span></div>
+                        <div className="text-zinc-600">طرف: <span className="font-medium text-zinc-900">{c.party}</span></div>
+                        <div className="text-zinc-600">نوع: <span className="font-medium text-zinc-900">{c.contract_type || "—"}</span></div>
                       </div>
                     </div>
                     <div className="md:min-w-[200px] border-t md:border-t-0 md:border-r border-zinc-100 pt-4 md:pt-0 md:pr-6 space-y-3">
                       <div>
                         <div className="text-xs text-zinc-500 mb-1">مبلغ</div>
-                        <div className="font-bold text-zinc-900">{Number(c.amount).toLocaleString("fa-IR")} ریال</div>
+                        <div className="font-bold text-zinc-900">{Number(c.amount || 0).toLocaleString("fa-IR")} ریال</div>
                       </div>
                       <div className="text-xs text-zinc-500">
                         <div>شروع: {c.start_date || "—"}</div>
@@ -215,6 +197,7 @@ export default function ContractsPage() {
               );
             })}
           </div>
+
           {filtered.length === 0 && (
             <div className="text-center py-16 bg-white rounded-xl border border-zinc-200">
               <div className="text-6xl mb-4">📭</div>
@@ -223,7 +206,6 @@ export default function ContractsPage() {
           )}
         </>
       )}
-
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -236,7 +218,7 @@ export default function ContractsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-zinc-700 mb-2">کد</label>
-                  <input type="text" value={code} onChange={function (e) { setCode(e.target.value); }} placeholder="CTR-006" className="w-full px-4 py-2.5 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  <input type="text" value={code} onChange={function (e) { setCode(e.target.value); }} placeholder="CTR-007" className="w-full px-4 py-2.5 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-zinc-700 mb-2">نوع قرارداد</label>
@@ -275,7 +257,6 @@ export default function ContractsPage() {
                   <input type="text" value={endDate} onChange={function (e) { setEndDate(e.target.value); }} placeholder="۱۴۰۵/۱۲/۲۹" className="w-full px-4 py-2.5 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-zinc-700 mb-2">وضعیت</label>
                 <select value={status} onChange={function (e) { setStatus(e.target.value); }} className="w-full px-4 py-2.5 border border-zinc-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
