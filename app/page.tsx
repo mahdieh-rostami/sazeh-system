@@ -15,16 +15,10 @@ export default function Home() {
             بستر یکپارچه سازمانی برای مدیریت هوشمند قراردادها، پرونده‌های حقوقی، املاک و دارایی‌های سازمان
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link
-              href="/login"
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 shadow-md"
-            >
+            <Link href="/login" className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 shadow-md">
               ورود به سامانه
             </Link>
-            <Link
-              href="/properties"
-              className="bg-white text-blue-600 border-2 border-blue-600 px-8 py-3 rounded-lg font-medium hover:bg-blue-50"
-            >
+            <Link href="/properties" className="bg-white text-blue-600 border-2 border-blue-600 px-8 py-3 rounded-lg font-medium hover:bg-blue-50">
               مشاهده املاک
             </Link>
           </div>
@@ -34,12 +28,8 @@ export default function Home() {
       <section className="py-16 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-zinc-900 mb-4">
-              سه هسته اصلی سامانه
-            </h2>
-            <p className="text-zinc-600">
-              یک سامانه یکپارچه برای همه فرآیندهای سازمان
-            </p>
+            <h2 className="text-3xl font-bold text-zinc-900 mb-4">سه هسته اصلی سامانه</h2>
+            <p className="text-zinc-600">یک سامانه یکپارچه برای همه فرآیندهای سازمان</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Link href="/contracts" className="group bg-white border border-zinc-200 rounded-2xl p-8 hover:shadow-xl hover:border-blue-200 transition-all">
@@ -47,9 +37,7 @@ export default function Home() {
                 <FileText className="w-7 h-7 text-white" />
               </div>
               <h3 className="text-xl font-bold text-zinc-900 mb-3">مدیریت قراردادها</h3>
-              <p className="text-zinc-600 leading-relaxed mb-4">
-                مدیریت چرخه کامل قراردادها از درخواست تا خاتمه و بایگانی
-              </p>
+              <p className="text-zinc-600 leading-relaxed mb-4">مدیریت چرخه کامل قراردادها از درخواست تا خاتمه و بایگانی</p>
               <span className="text-blue-600 font-medium flex items-center gap-1">
                 مشاهده
                 <ArrowLeft className="w-4 h-4" />
@@ -61,9 +49,7 @@ export default function Home() {
                 <Scale className="w-7 h-7 text-white" />
               </div>
               <h3 className="text-xl font-bold text-zinc-900 mb-3">امور حقوقی</h3>
-              <p className="text-zinc-600 leading-relaxed mb-4">
-                مدیریت پرونده‌های حقوقی، دعاوی، جلسات و مهلت‌های قانونی
-              </p>
+              <p className="text-zinc-600 leading-relaxed mb-4">مدیریت پرونده‌های حقوقی، دعاوی، جلسات و مهلت‌های قانونی</p>
               <span className="text-blue-600 font-medium flex items-center gap-1">
                 مشاهده
                 <ArrowLeft className="w-4 h-4" />
@@ -75,9 +61,7 @@ export default function Home() {
                 <Building2 className="w-7 h-7 text-white" />
               </div>
               <h3 className="text-xl font-bold text-zinc-900 mb-3">مدیریت املاک</h3>
-              <p className="text-zinc-600 leading-relaxed mb-4">
-                بانک اطلاعاتی جامع املاک، اسناد مالکیت و وضعیت حقوقی
-              </p>
+              <p className="text-zinc-600 leading-relaxed mb-4">بانک اطلاعاتی جامع املاک، اسناد مالکیت و وضعیت حقوقی</p>
               <span className="text-blue-600 font-medium flex items-center gap-1">
                 مشاهده
                 <ArrowLeft className="w-4 h-4" />
@@ -86,7 +70,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       <section className="py-16 px-4 bg-zinc-50">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -116,12 +99,10 @@ export default function Home() {
 
       <footer className="bg-zinc-900 text-zinc-400 py-8 px-4">
         <div className="max-w-7xl mx-auto text-center">
-          <p className="mb-2 text-sm">
-            سامانه جامع مدیریت قراردادها، امور حقوقی و املاک
-          </p>
+          <p className="mb-2 text-sm">سامانه جامع مدیریت قراردادها، امور حقوقی و املاک</p>
           <p className="text-xs">© ۱۴۰۵ — تمامی حقوق محفوظ است</p>
         </div>
       </footer>
     </div>
-  );
+ );
 }
