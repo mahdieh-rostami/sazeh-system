@@ -2,17 +2,18 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Building2, FileText, Scale, Home, LogIn } from "lucide-react";
+import { Building2, FileText, Scale, Home, LogIn, LayoutDashboard } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
 
-  const menuItems = [
-    { name: "خانه", href: "/", icon: Home },
-    { name: "املاک", href: "/properties", icon: Building2 },
-    { name: "قراردادها", href: "/contracts", icon: FileText },
-    { name: "امور حقوقی", href: "/legal", icon: Scale },
-  ];
+ const menuItems = [
+  { name: "خانه", href: "/", icon: Home },
+  { name: "داشبورد", href: "/dashboard", icon: LayoutDashboard },
+  { name: "املاک", href: "/properties", icon: Building2 },
+  { name: "قراردادها", href: "/contracts", icon: FileText },
+  { name: "امور حقوقی", href: "/legal", icon: Scale },
+];
 
   return (
     <nav dir="rtl" className="bg-white border-b border-zinc-200 sticky top-0 z-50">
