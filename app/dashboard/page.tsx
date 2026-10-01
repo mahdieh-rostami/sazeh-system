@@ -159,7 +159,7 @@ const recentCases = [...legalCases]
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-white rounded-xl border border-zinc-200 p-6 hover:shadow-lg transition-shadow">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-lg  from-blue-500 to-blue-700 flex items-center justify-center">
               <FileText className="w-6 h-6 text-white" />
             </div>
             <TrendingUp className="w-5 h-5 text-emerald-500" />
@@ -173,7 +173,7 @@ const recentCases = [...legalCases]
 
         <div className="bg-white rounded-xl border border-zinc-200 p-6 hover:shadow-lg transition-shadow">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-lg  from-amber-500 to-amber-700 flex items-center justify-center">
               <Building2 className="w-6 h-6 text-white" />
             </div>
             <TrendingUp className="w-5 h-5 text-emerald-500" />
@@ -187,7 +187,7 @@ const recentCases = [...legalCases]
 
         <div className="bg-white rounded-xl border border-zinc-200 p-6 hover:shadow-lg transition-shadow">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-lg  from-emerald-500 to-emerald-700 flex items-center justify-center">
               <Scale className="w-6 h-6 text-white" />
             </div>
             <TrendingUp className="w-5 h-5 text-emerald-500" />
@@ -201,7 +201,7 @@ const recentCases = [...legalCases]
 
         <div className="bg-white rounded-xl border border-zinc-200 p-6 hover:shadow-lg transition-shadow">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-lg  from-purple-500 to-purple-700 flex items-center justify-center">
               <DollarSign className="w-6 h-6 text-white" />
             </div>
             <TrendingUp className="w-5 h-5 text-emerald-500" />
@@ -292,7 +292,7 @@ const recentCases = [...legalCases]
 
       <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 mb-8">
         <div className="flex items-start gap-3">
-          <AlertTriangle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-1" />
+          <AlertTriangle className="w-6 h-6 text-amber-600 shrink-0 mt-1" />
           <div>
             <h3 className="font-bold text-amber-900 mb-2">هشدارهای مهم</h3>
             <ul className="text-sm text-amber-800 space-y-1">
