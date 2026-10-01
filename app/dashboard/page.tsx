@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import * as XLSX from "xlsx";
 import {
   FileText,
   Building2,
@@ -12,6 +13,8 @@ import {
   TrendingUp,
   Clock,
   ChevronLeft,
+  Download,
+  Printer,
 } from "lucide-react";
 import {
   BarChart,
@@ -31,11 +34,20 @@ import {
 
 const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4"];
 
+const RANGES = [
+  { key: "today", label: "امروز" },
+  { key: "week", label: "این هفته" },
+  { key: "month", label: "این ماه" },
+  { key: "year", label: "امسال" },
+  { key: "all", label: "همه" },
+];
+
 export default function DashboardPage() {
   const [contracts, setContracts] = useState<any[]>([]);
   const [properties, setProperties] = useState<any[]>([]);
   const [legalCases, setLegalCases] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [range, setRange] = useState("all");
 
   useEffect(function () {
     loadAllData();
@@ -54,83 +66,110 @@ export default function DashboardPage() {
     setLoading(false);
   }
 
-  const totalContractAmount = contracts.reduce(function (sum, c) {
+  function filterByRange(items: any[]) {
+    if (range === "all") return items;
+    const now = new Date();
+    let start: Date;
+    if (range === "today") {
+      start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    } else if (range === "week") {
+      const day = now.getDay();
+      start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - day);
+    } else if (range === "month") {
+      start = new Date(now.getFullYear(), now.getMonth(), 1);
+    } else if (range === "year") {
+      start = new Date(now.getFullYear(), 0, 1);
+    } else {
+      return items;
+    }
+    return items.filter(function (item) {
+      if (!item.created_at) return false;
+      const d = new Date(item.created_at);
+      return d >= start;
+    });
+  }
+
+  const fContracts = filterByRange(contracts);
+  const fProperties = filterByRange(properties);
+  const fLegalCases = filterByRange(legalCases);
+
+  const totalContractAmount = fContracts.reduce(function (sum, c) {
     return sum + Number(c.amount || 0);
   }, 0);
 
-  const activeContracts = contracts.filter(function (c) {
+  const activeContracts = fContracts.filter(function (c) {
     return c.status === "فعال";
   }).length;
 
-  const activeCases = legalCases.filter(function (c) {
+  const activeCases = fLegalCases.filter(function (c) {
     return c.case_status === "جاری";
   }).length;
 
-  const closedCases = legalCases.filter(function (c) {
+  const closedCases = fLegalCases.filter(function (c) {
     return c.case_status === "مختومه";
   }).length;
 
   const contractsByStatus = [
-    { name: "فعال", value: contracts.filter(function (c) { return c.status === "فعال"; }).length },
-    { name: "در حال اجرا", value: contracts.filter(function (c) { return c.status === "در حال اجرا"; }).length },
-    { name: "منقضی", value: contracts.filter(function (c) { return c.status === "منقضی"; }).length },
-    { name: "خاتمه‌یافته", value: contracts.filter(function (c) { return c.status === "خاتمه‌یافته"; }).length },
+    { name: "فعال", value: fContracts.filter(function (c) { return c.status === "فعال"; }).length },
+    { name: "در حال اجرا", value: fContracts.filter(function (c) { return c.status === "در حال اجرا"; }).length },
+    { name: "منقضی", value: fContracts.filter(function (c) { return c.status === "منقضی"; }).length },
+    { name: "خاتمه‌یافته", value: fContracts.filter(function (c) { return c.status === "خاتمه‌یافته"; }).length },
   ].filter(function (item) { return item.value > 0; });
 
   const propertiesByType = [
-    { name: "اداری", value: properties.filter(function (p) { return p.property_type === "اداری"; }).length },
-    { name: "تجاری", value: properties.filter(function (p) { return p.property_type === "تجاری"; }).length },
-    { name: "مسکونی", value: properties.filter(function (p) { return p.property_type === "مسکونی"; }).length },
-    { name: "انبار", value: properties.filter(function (p) { return p.property_type === "انبار"; }).length },
-    { name: "ورزشی", value: properties.filter(function (p) { return p.property_type === "ورزشی"; }).length },
-    { name: "پارکینگ", value: properties.filter(function (p) { return p.property_type === "پارکینگ"; }).length },
+    { name: "اداری", value: fProperties.filter(function (p) { return p.property_type === "اداری"; }).length },
+    { name: "تجاری", value: fProperties.filter(function (p) { return p.property_type === "تجاری"; }).length },
+    { name: "مسکونی", value: fProperties.filter(function (p) { return p.property_type === "مسکونی"; }).length },
+    { name: "انبار", value: fProperties.filter(function (p) { return p.property_type === "انبار"; }).length },
+    { name: "ورزشی", value: fProperties.filter(function (p) { return p.property_type === "ورزشی"; }).length },
+    { name: "پارکینگ", value: fProperties.filter(function (p) { return p.property_type === "پارکینگ"; }).length },
   ].filter(function (item) { return item.value > 0; });
 
   const legalByStage = [
-    { name: "در حال رسیدگی", value: legalCases.filter(function (c) { return c.case_stage === "در حال رسیدگی"; }).length },
-    { name: "تجدیدنظر", value: legalCases.filter(function (c) { return c.case_stage === "تجدیدنظر"; }).length },
-    { name: "مختومه", value: legalCases.filter(function (c) { return c.case_stage === "مختومه"; }).length },
+    { name: "در حال رسیدگی", value: fLegalCases.filter(function (c) { return c.case_stage === "در حال رسیدگی"; }).length },
+    { name: "تجدیدنظر", value: fLegalCases.filter(function (c) { return c.case_stage === "تجدیدنظر"; }).length },
+    { name: "مختومه", value: fLegalCases.filter(function (c) { return c.case_stage === "مختومه"; }).length },
   ].filter(function (item) { return item.value > 0; });
 
   function getPersianMonthName(dateStr: string) {
-  if (!dateStr) return null;
-  try {
-    const d = new Date(dateStr);
-    return d.toLocaleDateString("fa-IR", { month: "long" });
-  } catch (e) {
-    return null;
+    if (!dateStr) return null;
+    try {
+      const d = new Date(dateStr);
+      return d.toLocaleDateString("fa-IR", { month: "long" });
+    } catch (e) {
+      return null;
+    }
   }
-}
 
-function getMonthlyData() {
-  const months = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور"];
-  const result = months.map(function (m) {
-    return { month: m, قرارداد: 0, پرونده: 0 };
-  });
+  function getMonthlyData() {
+    const months = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور"];
+    const result = months.map(function (m) {
+      return { month: m, قرارداد: 0, پرونده: 0 };
+    });
 
-  contracts.forEach(function (c) {
-    const m = getPersianMonthName(c.created_at);
-    const idx = months.indexOf(m || "");
-    if (idx >= 0) result[idx].قرارداد++;
-  });
+    contracts.forEach(function (c) {
+      const m = getPersianMonthName(c.created_at);
+      const idx = months.indexOf(m || "");
+      if (idx >= 0) result[idx].قرارداد++;
+    });
 
-  legalCases.forEach(function (c) {
-    const m = getPersianMonthName(c.created_at);
-    const idx = months.indexOf(m || "");
-    if (idx >= 0) result[idx].پرونده++;
-  });
+    legalCases.forEach(function (c) {
+      const m = getPersianMonthName(c.created_at);
+      const idx = months.indexOf(m || "");
+      if (idx >= 0) result[idx].پرونده++;
+    });
 
-  return result;
-}
+    return result;
+  }
 
-const monthlyData = getMonthlyData();
+  const monthlyData = getMonthlyData();
 
-const recentContracts = [...contracts]
-  .sort(function (a, b) { return b.id - a.id; })
-  .slice(0, 5);
-const recentCases = [...legalCases]
-  .sort(function (a, b) { return b.id - a.id; })
-  .slice(0, 5);
+  const recentContracts = [...fContracts]
+    .sort(function (a, b) { return b.id - a.id; })
+    .slice(0, 5);
+  const recentCases = [...fLegalCases]
+    .sort(function (a, b) { return b.id - a.id; })
+    .slice(0, 5);
 
   function formatAmount(amount: number) {
     if (amount >= 1000000000) {
@@ -141,6 +180,66 @@ const recentCases = [...legalCases]
     }
     return amount.toLocaleString("fa-IR");
   }
+
+  function exportToExcel() {
+    const wb = XLSX.utils.book_new();
+
+    const contractsData = fContracts.map(function (c) {
+      return {
+        "کد": c.code,
+        "عنوان": c.title,
+        "طرف قرارداد": c.party,
+        "نوع": c.contract_type,
+        "مبلغ (ریال)": Number(c.amount || 0),
+        "تاریخ شروع": c.start_date || "",
+        "تاریخ پایان": c.end_date || "",
+        "وضعیت": c.status,
+      };
+    });
+    const wsContracts = XLSX.utils.json_to_sheet(contractsData);
+    XLSX.utils.book_append_sheet(wb, wsContracts, "قراردادها");
+
+    const propertiesData = fProperties.map(function (p) {
+      return {
+        "کد": p.code,
+        "عنوان": p.title,
+        "نوع": p.property_type,
+        "متراژ": Number(p.area || 0),
+        "استان": p.province || "",
+        "شهر": p.city || "",
+        "آدرس": p.full_address || "",
+        "شماره سند": p.deed_number || "",
+        "وضعیت": p.status,
+      };
+    });
+    const wsProperties = XLSX.utils.json_to_sheet(propertiesData);
+    XLSX.utils.book_append_sheet(wb, wsProperties, "املاک");
+
+    const legalData = fLegalCases.map(function (c) {
+      return {
+        "کد": c.code,
+        "عنوان": c.title,
+        "نوع": c.case_type,
+        "خواهان": c.plaintiff || "",
+        "خوانده": c.defendant || "",
+        "مرجع": c.court_name || "",
+        "مرحله": c.case_stage,
+        "مبلغ خواسته (ریال)": Number(c.claim_amount || 0),
+        "مهلت بعدی": c.next_deadline || "",
+        "وضعیت": c.case_status,
+      };
+    });
+    const wsLegal = XLSX.utils.json_to_sheet(legalData);
+    XLSX.utils.book_append_sheet(wb, wsLegal, "امور حقوقی");
+
+    const fileName = "sazeh-system-report-" + new Date().toISOString().slice(0, 10) + ".xlsx";
+    XLSX.writeFile(wb, fileName);
+  }
+
+  function printReport() {
+    window.print();
+  }
+
   if (loading) {
     return (
       <div dir="rtl" className="p-8 max-w-7xl mx-auto text-center">
@@ -148,12 +247,43 @@ const recentCases = [...legalCases]
       </div>
     );
   }
-
   return (
     <div dir="rtl" className="p-6 md:p-8 max-w-7xl mx-auto">
-      <div className="mb-8">
+      <div className="mb-6">
         <h1 className="text-3xl font-bold text-zinc-900 mb-2">داشبورد مدیریتی</h1>
         <p className="text-zinc-600">نمای کلی سامانه در یک نگاه</p>
+      </div>
+
+      <div className="bg-white rounded-xl border border-zinc-200 p-4 mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap gap-2">
+          {RANGES.map(function (r) {
+            const isActive = range === r.key;
+            const cls = isActive
+              ? "px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white"
+              : "px-4 py-2 rounded-lg text-sm font-medium bg-zinc-100 text-zinc-700 hover:bg-zinc-200";
+            return (
+              <button key={r.key} onClick={function () { setRange(r.key); }} className={cls}>
+                {r.label}
+              </button>
+            );
+          })}
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={exportToExcel}
+            className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-700"
+          >
+            <Download className="w-4 h-4" />
+            خروجی Excel
+          </button>
+          <button
+            onClick={printReport}
+            className="flex items-center gap-2 bg-zinc-100 text-zinc-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-zinc-200"
+          >
+            <Printer className="w-4 h-4" />
+            چاپ
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -164,11 +294,9 @@ const recentCases = [...legalCases]
             </div>
             <TrendingUp className="w-5 h-5 text-emerald-500" />
           </div>
-          <div className="text-3xl font-bold text-zinc-900 mb-1">{contracts.length}</div>
+          <div className="text-3xl font-bold text-zinc-900 mb-1">{fContracts.length}</div>
           <div className="text-sm text-zinc-600 mb-2">کل قراردادها</div>
-          <div className="text-xs text-emerald-600">
-            {activeContracts} قرارداد فعال
-          </div>
+          <div className="text-xs text-emerald-600">{activeContracts} قرارداد فعال</div>
         </div>
 
         <div className="bg-white rounded-xl border border-zinc-200 p-6 hover:shadow-lg transition-shadow">
@@ -178,10 +306,10 @@ const recentCases = [...legalCases]
             </div>
             <TrendingUp className="w-5 h-5 text-emerald-500" />
           </div>
-          <div className="text-3xl font-bold text-zinc-900 mb-1">{properties.length}</div>
+          <div className="text-3xl font-bold text-zinc-900 mb-1">{fProperties.length}</div>
           <div className="text-sm text-zinc-600 mb-2">کل املاک</div>
           <div className="text-xs text-emerald-600">
-            {properties.filter(function (p) { return p.status === "فعال"; }).length} ملک فعال
+            {fProperties.filter(function (p) { return p.status === "فعال"; }).length} ملک فعال
           </div>
         </div>
 
@@ -192,13 +320,12 @@ const recentCases = [...legalCases]
             </div>
             <TrendingUp className="w-5 h-5 text-emerald-500" />
           </div>
-          <div className="text-3xl font-bold text-zinc-900 mb-1">{legalCases.length}</div>
+          <div className="text-3xl font-bold text-zinc-900 mb-1">{fLegalCases.length}</div>
           <div className="text-sm text-zinc-600 mb-2">پرونده‌های حقوقی</div>
           <div className="text-xs text-zinc-500">
             {activeCases} جاری • {closedCases} مختومه
           </div>
         </div>
-
         <div className="bg-white rounded-xl border border-zinc-200 p-6 hover:shadow-lg transition-shadow">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 rounded-lg  from-purple-500 to-purple-700 flex items-center justify-center">
@@ -289,20 +416,20 @@ const recentCases = [...legalCases]
           </ResponsiveContainer>
         </div>
       </div>
-
       <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 mb-8">
         <div className="flex items-start gap-3">
           <AlertTriangle className="w-6 h-6 text-amber-600 shrink-0 mt-1" />
           <div>
             <h3 className="font-bold text-amber-900 mb-2">هشدارهای مهم</h3>
             <ul className="text-sm text-amber-800 space-y-1">
-              <li>• {contracts.filter(function (c) { return c.status === "فعال"; }).length} قرارداد فعال در حال پیگیری</li>
+              <li>• {fContracts.filter(function (c) { return c.status === "فعال"; }).length} قرارداد فعال در حال پیگیری</li>
               <li>• {activeCases} پرونده حقوقی جاری نیاز به پیگیری دارد</li>
-              <li>• {properties.filter(function (p) { return p.status === "در حال تعمیر"; }).length} ملک در حال تعمیر</li>
+              <li>• {fProperties.filter(function (p) { return p.status === "در حال تعمیر"; }).length} ملک در حال تعمیر</li>
             </ul>
           </div>
         </div>
       </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl border border-zinc-200 p-6">
           <div className="flex items-center justify-between mb-4">
